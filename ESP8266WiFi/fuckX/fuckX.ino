@@ -41,7 +41,26 @@ void handleRoot(){
 }
 
 void retJson() {
-  
+  Serial.println("sending json");
+  String content;
+  char ptr[25];
+  dtostrf(celsius,2,3,ptr);
+  content += "{\"Temperature\":\"";
+  content += ptr;
+  content += "\",";
+
+  char ptr2[25];
+  itoa(digitalRead(D2),ptr2,10);
+  content += "\"hasPeopleMoved\":\"";
+  content += ptr2;
+  content += "\",";
+
+  char ptr3[25];
+  itoa(analogRead(A0),ptr3,10);
+  content += "\"CO\":\"";
+  content += ptr3;
+  content += "\"}";
+  server.send(200,"application/json",content);
 }
 
 //no need authentification
