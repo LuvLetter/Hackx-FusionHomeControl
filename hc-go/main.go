@@ -54,7 +54,7 @@ func Lightbulb_setup() {
 	t.Start()
 }
 
-type TemperatureResponse struct {
+type sensorResponse struct {
     Temperature float64
 		hasPeopleMoved bool
 		CO int
@@ -62,10 +62,28 @@ type TemperatureResponse struct {
 }
 
 func GetTempture() float64 {
-	TR1 := new(TemptureResponse) // or &Foo{}
-	getJson(devIP+"json", TR1)
-	log.Println(TemptureResponse)
-	return 0
+	responseData := new(sensorResponse)
+	getJson(devIP+"json", responseData)
+	log.Println(responseData.Temperature)
+	return sensorResponse.Temperature
+}
+func GetIRsensor() bool {
+	responseData := new(sensorResponse)
+	getJson(devIP+"json", responseData)
+	log.Println(responseData.hasPeopleMoved)
+	return responseData.hasPeopleMoved
+}
+func GetCO() int {
+	responseData := new(sensorResponse)
+	getJson(devIP+"json", responseData)
+	log.Println(responseData.CO)
+	return responseData.CO
+}
+func GetHeartRate() int {
+	responseData := new(sensorResponse)
+	getJson(devIP+"json", responseData)
+	log.Println(responseData.heartRate)
+	return responseData.heartRate
 }
 
 func TemptureSensor_setup() {
