@@ -67,8 +67,7 @@ func GetSensorJson(){
 	getJson(NodeIP, responseData)
 }
 
-func GetTempture() float64 {
-
+func GetTemperature() float64 {
 	log.Println(responseData.Temperature)
 	return responseData.Temperature
 }
@@ -93,7 +92,8 @@ func TemptureSensor_setup() {
 		Name:         "Generic Tempture Sensor",
 		Manufacturer: "HDU LUG",
 	}
-	TemptureSensor := accessory.NewTemperatureSensor(info, GetTempture(), -35, 100, 0.5)
+	log.Println(GetTemperature())
+	TemptureSensor := accessory.NewTemperatureSensor(info, GetTemperature(), -35, 100, 0.5)
 	t, err := hc.NewIPTransport(hc.Config{Pin: "00000001"}, TemptureSensor.Accessory)
 	log.Println("0000001")
 	if err != nil {
@@ -107,8 +107,16 @@ func TemptureSensor_setup() {
 }
 
 func main() {
+
+  Lightbulb_setup()
+	/*
 	var wg sync.WaitGroup
-	wg.Add(2)
+	wg.Add(3)
+
+	go func(){
+		defer wg.Done()
+		GetSensorJson()
+	}()
 
 	go func() {
 		defer wg.Done()
@@ -120,7 +128,7 @@ func main() {
 	}()
 
 	wg.Wait()
-
+	*/
 	// or
 	// signals := make(chan uint8, 2)
 	// go func() {
