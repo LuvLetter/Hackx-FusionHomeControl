@@ -17,13 +17,13 @@ boolean isHigh;
 void flush() {
   rate = count*3;
   count = 0;
-}  
+}
 ESP8266WebServer server(80);
 
 //root page can be accessed only if authentification is ok
 void handleRoot(){
   Serial.println("Enter handleRoot");
-  
+
   String content = "<html><body><H2>Success</H2><br>";
 
   char ptr[25];
@@ -66,7 +66,12 @@ void retJson() {
   char ptr2[25];
   itoa(digitalRead(D2),ptr2,10);
   content += "\"hasPeopleMoved\":\"";
-  content += ptr2;
+  if(ptr2 == 1){
+    content += true;
+  }
+  else{
+    content += false;
+  }
   content += "\",";
 
   char ptr3[25];
@@ -75,7 +80,7 @@ void retJson() {
   content += ptr3;
   content += "\",";
 
-  
+
   char ptr4[25];
   itoa(rate,ptr4,10);
   content += "\"heartRate\":\"";
@@ -117,7 +122,7 @@ void loop(void){
   byte type_s;
   byte data[12];
   byte addr[8];
-  
+
   if ( !ds.search(addr)) {
     Serial.println("No more addresses.");
     Serial.println();
@@ -125,7 +130,7 @@ void loop(void){
     delay(250);
     return;
   }
- 
+
 
   if (OneWire::crc8(addr, 7) != addr[7]) {
     return;
@@ -135,12 +140,12 @@ void loop(void){
   ds.reset();
   ds.select(addr);
   ds.write(0x44, 1);        // start conversion, with parasite power on at the end
-  
+
   delay(1000);     // maybe 750ms is enough, maybe not
   // we might do a ds.depower() here, but the reset will take care of it.
-  
+
   present = ds.reset();
-  ds.select(addr);    
+  ds.select(addr);
   ds.write(0xBE);         // Read Scratchpad
 
   Serial.print(" ");
@@ -178,7 +183,7 @@ void loop(void){
       count++;
     }
     if(heartValue < 600&&isHigh==true) {
-      isHigh=false;         
+      isHigh=false;
     }
     delay(20);
   }

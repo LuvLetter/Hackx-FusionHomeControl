@@ -5,7 +5,18 @@ import (
 	"github.com/brutella/hc/accessory"
 	"log"
 	"sync"
+ 	"encoding/json"
 )
+
+func getJson(url string, target interface{}) error {
+    r, err := http.Get(url)
+    if err != nil {
+        return err
+    }
+    defer r.Body.Close()
+
+    return json.NewDecoder(r.Body).Decode(target)
+}
 
 func turnLightOn() {
 	log.Println("Turn Light On")
@@ -14,6 +25,7 @@ func turnLightOn() {
 func turnLightOff() {
 	log.Println("Turn Light Off")
 }
+
 func Lightbulb_setup() {
 	info := accessory.Info{
 		Name:         "Personal Light Bulb",
@@ -41,7 +53,18 @@ func Lightbulb_setup() {
 
 	t.Start()
 }
+
+type TemperatureResponse struct {
+    Temperature float64
+		hasPeopleMoved bool
+		CO int
+		heartRate int
+}
+
 func GetTempture() float64 {
+	TR1 := new(TemptureResponse) // or &Foo{}
+	getJson(devIP+"json", TR1)
+	log.Println(TemptureResponse)
 	return 0
 }
 
@@ -52,7 +75,7 @@ func TemptureSensor_setup() {
 	}
 	TemptureSensor := accessory.NewTemperatureSensor(info, GetTempture(), -35, 100, 0.5)
 	t, err := hc.NewIPTransport(hc.Config{Pin: "00000001"}, TemptureSensor.Accessory)
-	log.Println("32191123")
+	log.Println("0000001")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,6 +87,7 @@ func TemptureSensor_setup() {
 }
 
 func main() {
+	devIP := "10.221.65.124/"
 	var wg sync.WaitGroup
 	wg.Add(2)
 
