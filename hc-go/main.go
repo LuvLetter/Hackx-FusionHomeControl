@@ -8,7 +8,7 @@ import (
 	"net/http"
  	"encoding/json"
 )
-var NodeIP string = "10.221.65.124/json"
+var NodeIP string = "192.168.0.105/json"
 var responseData = sensorResponse {26.312, true, 183, 0}
 func getJson(url string, target interface{}) error {
   r, err := http.Get(url)
