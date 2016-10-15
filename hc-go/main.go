@@ -4,6 +4,7 @@ import (
 	"github.com/brutella/hc"
 	"github.com/brutella/hc/accessory"
 	"log"
+	"sync"
 )
 
 func turnLightOn() {
@@ -13,7 +14,7 @@ func turnLightOn() {
 func turnLightOff() {
 	log.Println("Turn Light Off")
 }
-func Lightbulb_setup(){
+func Lightbulb_setup() {
 	info := accessory.Info{
 		Name:         "Personal Light Bulb",
 		Manufacturer: "Matthias",
@@ -40,8 +41,8 @@ func Lightbulb_setup(){
 
 	t.Start()
 }
-func GetTempture() float64{
-		return 0
+func GetTempture() float64 {
+	return 0
 }
 
 func TemptureSensor_setup() {
@@ -49,12 +50,12 @@ func TemptureSensor_setup() {
 		Name:         "Generic Tempture Sensor",
 		Manufacturer: "HDU LUG",
 	}
-  TemptureSensor := accessory.NewTemperatureSensor(info, GetTempture(), -35, 100, 0.5)
-  t, err := hc.NewIPTransport(hc.Config{Pin: "32191123"}, TemptureSensor.Accessory)
+	TemptureSensor := accessory.NewTemperatureSensor(info, GetTempture(), -35, 100, 0.5)
+	t, err := hc.NewIPTransport(hc.Config{Pin: "32191123"}, TemptureSensor.Accessory)
 	log.Println("32191123")
-  if err != nil {
-  	log.Fatal(err)
-  }
+	if err != nil {
+		log.Fatal(err)
+	}
 	hc.OnTermination(func() {
 		t.Stop()
 	})
@@ -63,6 +64,30 @@ func TemptureSensor_setup() {
 }
 
 func main() {
-	Lightbulb_setup()
-	TemptureSensor_setup()
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		Lightbulb_setup()
+	}()
+	go func() {
+		defer wg.Done()
+		TemptureSensor_setup()
+	}()
+
+	wg.Wait()
+
+	// or
+	// signals := make(chan uint8, 2)
+	// go func() {
+	// 	Lightbulb_setup()
+	// 	signals <- 1
+	// }()
+	// go func() {
+	// 	TemptureSensor_setup()
+	// 	signals <- 1
+	// }()
+	// <-signals
+	// <-signals
 }
