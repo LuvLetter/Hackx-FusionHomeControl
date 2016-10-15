@@ -11,13 +11,12 @@ import (
 var NodeIP string = "10.221.65.124/json"
 var responseData = sensorResponse {26.312, true, 183, 0}
 func getJson(url string, target interface{}) error {
-    r, err := http.Get(url)
-    if err != nil {
-        return err
-    }
-    defer r.Body.Close()
-
-    return json.NewDecoder(r.Body).Decode(target)
+  r, err := http.Get(url)
+  if err != nil {
+    return err
+  }
+  defer r.Body.Close()
+  return json.NewDecoder(r.Body).Decode(target)
 }
 
 func turnLightOn() {
@@ -57,10 +56,10 @@ func Lightbulb_setup() {
 }
 
 type sensorResponse struct {
-    Temperature float64
-		hasPeopleMoved bool
-		CO int
-		heartRate int
+  Temperature float64
+	hasPeopleMoved bool
+	CO int
+	heartRate int
 }
 
 func GetSensorJson(){
@@ -107,28 +106,27 @@ func TemptureSensor_setup() {
 }
 
 func main() {
-
-  Lightbulb_setup()
-	/*
 	var wg sync.WaitGroup
 	wg.Add(3)
 
 	go func(){
 		defer wg.Done()
 		GetSensorJson()
+		log.Println("getjson")
 	}()
 
 	go func() {
 		defer wg.Done()
 		Lightbulb_setup()
+		log.Println("getjson")
 	}()
 	go func() {
 		defer wg.Done()
 		TemptureSensor_setup()
+		log.Println("getjson")
 	}()
 
 	wg.Wait()
-	*/
 	// or
 	// signals := make(chan uint8, 2)
 	// go func() {
