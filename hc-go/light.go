@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/LuvLetter/hc"
-	"github.com/LuvLetter/hc/accessory"
+	"github.com/brutella/hc"
+	"github.com/brutella/hc/accessory"
 	"log"
 )
 
