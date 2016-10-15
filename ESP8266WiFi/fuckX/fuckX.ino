@@ -57,33 +57,26 @@ void handleRoot(){
 void retJson() {
   Serial.println("sending json");
   String content;
-  char ptr[25];
-  dtostrf(celsius,2,3,ptr);
-  content += "{\"Temperature\":\"";
-  content += ptr;
-  content += "\",";
+  content += "{\"Temperature\":";
+  content += celsius;
+  content += ",";
 
-  content += "\"hasPeopleMoved\":\"";
+  content += "\"hasPeopleMoved\":";
   if(digitalRead(D2) == 1){
     content += "true";
   }
   else{
     content += "false" ;
   }
-  content += "\",";
+  content += ",";
 
-  char ptr3[25];
-  itoa(analogRead(A0),ptr3,10);
-  content += "\"CO\":\"";
-  content += ptr3;
-  content += "\",";
+  content += "\"CO\":";
+  content += analogRead(A0);
+  content += ",";
 
-
-  char ptr4[25];
-  itoa(rate,ptr4,10);
-  content += "\"heartRate\":\"";
-  content += ptr4;
-  content += "\"}";
+  content += "\"heartRate\":";
+  content += rate;
+  content += "}";
 
   server.send(200,"application/json",content);
 }
