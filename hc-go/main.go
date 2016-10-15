@@ -4,7 +4,7 @@ import (
 	"github.com/brutella/hc"
 	"github.com/brutella/hc/accessory"
 	"log"
-	//sync"
+	"sync"
 	"net/http"
  	"encoding/json"
 )
