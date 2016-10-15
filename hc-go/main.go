@@ -30,7 +30,7 @@ func Lightbulb_setup() {
 		}
 	})
 
-	t, err := hc.NewIPTransport(hc.Config{Pin: "32191123"}, acc.Accessory)
+	t, err := hc.NewIPTransport(hc.Config{Pin: "00000002"}, acc.Accessory)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,7 +51,7 @@ func TemptureSensor_setup() {
 		Manufacturer: "HDU LUG",
 	}
 	TemptureSensor := accessory.NewTemperatureSensor(info, GetTempture(), -35, 100, 0.5)
-	t, err := hc.NewIPTransport(hc.Config{Pin: "32191123"}, TemptureSensor.Accessory)
+	t, err := hc.NewIPTransport(hc.Config{Pin: "00000001"}, TemptureSensor.Accessory)
 	log.Println("32191123")
 	if err != nil {
 		log.Fatal(err)
