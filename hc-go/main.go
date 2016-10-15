@@ -5,19 +5,7 @@ import (
 	"github.com/brutella/hc/accessory"
 	"log"
 	"sync"
-	"net/http"
- 	"encoding/json"
 )
-var NodeIP string = "192.168.0.105/json"
-var responseData = sensorResponse {26.312, true, 183, 0}
-func getJson(url string, target interface{}) error {
-  r, err := http.Get(url)
-  if err != nil {
-    return err
-  }
-  defer r.Body.Close()
-  return json.NewDecoder(r.Body).Decode(target)
-}
 
 func turnLightOn() {
 	log.Println("Turn Light On")
@@ -26,7 +14,6 @@ func turnLightOn() {
 func turnLightOff() {
 	log.Println("Turn Light Off")
 }
-
 func Lightbulb_setup() {
 	info := accessory.Info{
 		Name:         "Personal Light Bulb",
@@ -54,36 +41,8 @@ func Lightbulb_setup() {
 
 	t.Start()
 }
-
-type sensorResponse struct {
-  Temperature float64
-	hasPeopleMoved bool
-	CO int
-	heartRate int
-}
-
-func GetSensorJson(){
-	getJson(NodeIP, responseData)
-}
-
-func GetTemperature() float64 {
-	log.Println(responseData.Temperature)
-	return responseData.Temperature
-}
-func GetIRsensor() bool {
-
-	log.Println(responseData.hasPeopleMoved)
-	return responseData.hasPeopleMoved
-}
-func GetCO() int {
-
-	log.Println(responseData.CO)
-	return responseData.CO
-}
-func GetHeartRate() int {
-
-	log.Println(responseData.heartRate)
-	return responseData.heartRate
+func GetTempture() float64 {
+	return 0
 }
 
 func TemptureSensor_setup() {
@@ -91,10 +50,9 @@ func TemptureSensor_setup() {
 		Name:         "Generic Tempture Sensor",
 		Manufacturer: "HDU LUG",
 	}
-	log.Println(GetTemperature())
-	TemptureSensor := accessory.NewTemperatureSensor(info, GetTemperature(), -35, 100, 0.5)
+	TemptureSensor := accessory.NewTemperatureSensor(info, GetTempture(), -35, 100, 0.5)
 	t, err := hc.NewIPTransport(hc.Config{Pin: "00000001"}, TemptureSensor.Accessory)
-	log.Println("0000001")
+	log.Println("32191123")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -107,26 +65,19 @@ func TemptureSensor_setup() {
 
 func main() {
 	var wg sync.WaitGroup
-	wg.Add(3)
-
-	go func(){
-		defer wg.Done()
-		GetSensorJson()
-		log.Println("getjson")
-	}()
+	wg.Add(2)
 
 	go func() {
 		defer wg.Done()
 		Lightbulb_setup()
-		log.Println("getjson")
 	}()
 	go func() {
 		defer wg.Done()
 		TemptureSensor_setup()
-		log.Println("getjson")
 	}()
 
 	wg.Wait()
+
 	// or
 	// signals := make(chan uint8, 2)
 	// go func() {
