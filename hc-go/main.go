@@ -5,8 +5,10 @@ import (
 	"github.com/brutella/hc/accessory"
 	"log"
 	"sync"
+	"net/http"
  	"encoding/json"
 )
+var devIP string = "10.221.65.124/"
 
 func getJson(url string, target interface{}) error {
     r, err := http.Get(url)
@@ -65,7 +67,7 @@ func GetTempture() float64 {
 	responseData := new(sensorResponse)
 	getJson(devIP+"json", responseData)
 	log.Println(responseData.Temperature)
-	return sensorResponse.Temperature
+	return responseData.Temperature
 }
 func GetIRsensor() bool {
 	responseData := new(sensorResponse)
@@ -105,7 +107,6 @@ func TemptureSensor_setup() {
 }
 
 func main() {
-	devIP := "10.221.65.124/"
 	var wg sync.WaitGroup
 	wg.Add(2)
 
