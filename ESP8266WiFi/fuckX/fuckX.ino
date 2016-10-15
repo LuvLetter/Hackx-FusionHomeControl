@@ -4,13 +4,20 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <OneWire.h>
-
+#define heartPin D0
 OneWire  ds(D1);  // on pin D1
 
 const char* ssid = "Hackx";
 const char* password = "fudan2016";
 float celsius, fahrenheit;
-  
+float rate;
+int minTime;
+int count;
+boolean isHigh;
+void flush() {
+  rate = count*3;
+  count = 0;
+}  
 ESP8266WebServer server(80);
 
 //root page can be accessed only if authentification is ok
@@ -37,6 +44,13 @@ void handleRoot(){
   content += ptr3;
   content += "</h3><br>";
 
+
+  char ptr4[25];
+  itoa(rate,ptr4,10);
+  content += "<h3>heartRate = ";
+  content += ptr4;
+  content += "</h3><br>";
+
   server.send(200, "text/html", content);
 }
 
@@ -59,13 +73,22 @@ void retJson() {
   itoa(analogRead(A0),ptr3,10);
   content += "\"CO\":\"";
   content += ptr3;
+  content += "\",";
+
+  
+  char ptr4[25];
+  itoa(rate,ptr4,10);
+  content += "\"heartRate\":\"";
+  content += ptr4;
   content += "\"}";
+
   server.send(200,"application/json",content);
 }
 
 //no need authentification
 
 void setup(void){
+  isHigh = false;
   Serial.begin(115200);
   WiFi.begin(ssid, password);
   Serial.println("");
@@ -102,37 +125,12 @@ void loop(void){
     delay(250);
     return;
   }
-  
-  Serial.print("ROM =");
-  for( i = 0; i < 8; i++) {
-    Serial.write(' ');
-    Serial.print(addr[i], HEX);
-  }
+ 
 
   if (OneWire::crc8(addr, 7) != addr[7]) {
-      Serial.println("CRC is not valid!");
-      return;
+    return;
   }
-  Serial.println();
- 
-  // the first ROM byte indicates which chip
-  switch (addr[0]) {
-    case 0x10:
-      Serial.println("  Chip = DS18S20");  // or old DS1820
-      type_s = 1;
-      break;
-    case 0x28:
-      Serial.println("  Chip = DS18B20");
-      type_s = 0;
-      break;
-    case 0x22:
-      Serial.println("  Chip = DS1822");
-      type_s = 0;
-      break;
-    default:
-      Serial.println("Device is not a DS18x20 family device.");
-      return;
-  } 
+  type_s = 0;
 
   ds.reset();
   ds.select(addr);
@@ -145,22 +143,13 @@ void loop(void){
   ds.select(addr);    
   ds.write(0xBE);         // Read Scratchpad
 
-  Serial.print("  Data = ");
-  Serial.print(present, HEX);
   Serial.print(" ");
   for ( i = 0; i < 9; i++) {           // we need 9 bytes
     data[i] = ds.read();
-    Serial.print(data[i], HEX);
-    Serial.print(" ");
   }
-  Serial.print(" CRC=");
-  Serial.print(OneWire::crc8(data, 8), HEX);
-  Serial.println();
+//  Serial.print(OneWire::crc8(data, 8), HEX);
+//  Serial.println();
 
-  // Convert the data to actual temperature
-  // because the result is a 16 bit signed integer, it should
-  // be stored to an "int16_t" type, which is always 16 bits
-  // even when compiled on a 32 bit processor.
   int16_t raw = (data[1] << 8) | data[0];
   if (type_s) {
     raw = raw << 3; // 9 bit resolution default
@@ -181,5 +170,18 @@ void loop(void){
   Serial.println(celsius);
   Serial.println(digitalRead(D2));
   Serial.println(analogRead(A0));
+  minTime=millis();
+  while((millis()-minTime)<20000) {
+    int heartValue = analogRead(heartPin);
+    if(heartValue > 600&&isHigh==false) {
+      isHigh=true;
+      count++;
+    }
+    if(heartValue < 600&&isHigh==true) {
+      isHigh=false;         
+    }
+    delay(20);
+  }
+  flush();
   server.handleClient();
 }
