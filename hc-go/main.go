@@ -8,8 +8,8 @@ import (
 	"net/http"
  	"encoding/json"
 )
-var devIP string = "10.221.65.124/"
-
+var NodeIP string = "10.221.65.124/json"
+var responseData = sensorResponse {26.312, true, 183, 0}
 func getJson(url string, target interface{}) error {
     r, err := http.Get(url)
     if err != nil {
@@ -63,27 +63,27 @@ type sensorResponse struct {
 		heartRate int
 }
 
+func GetSensorJson(){
+	getJson(NodeIP, responseData)
+}
+
 func GetTempture() float64 {
-	responseData := new(sensorResponse)
-	getJson(devIP+"json", responseData)
+
 	log.Println(responseData.Temperature)
 	return responseData.Temperature
 }
 func GetIRsensor() bool {
-	responseData := new(sensorResponse)
-	getJson(devIP+"json", responseData)
+
 	log.Println(responseData.hasPeopleMoved)
 	return responseData.hasPeopleMoved
 }
 func GetCO() int {
-	responseData := new(sensorResponse)
-	getJson(devIP+"json", responseData)
+
 	log.Println(responseData.CO)
 	return responseData.CO
 }
 func GetHeartRate() int {
-	responseData := new(sensorResponse)
-	getJson(devIP+"json", responseData)
+
 	log.Println(responseData.heartRate)
 	return responseData.heartRate
 }
