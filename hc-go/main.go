@@ -49,17 +49,20 @@ func TemptureSensor_setup() {
 		Name:         "Generic Tempture Sensor",
 		Manufacturer: "HDU LUG",
 	}
-  for i := 0; true; i++ {
-    TemptureSensor := accessory.NewTemperatureSensor(info, GetTempture(), -35, 100, 0.5)
-     t, err := hc.NewIPTransport(hc.Config{Pin: "32191123"}, TemptureSensor.Accessory)
-  	if err != nil {
-  		log.Fatal(err)
-  	}
+  TemptureSensor := accessory.NewTemperatureSensor(info, GetTempture(), -35, 100, 0.5)
+  t, err := hc.NewIPTransport(hc.Config{Pin: "32191123"}, TemptureSensor.Accessory)
+	log.Println("32191123")
+  if err != nil {
+  	log.Fatal(err)
   }
-	t.start()
+	hc.OnTermination(func() {
+		t.Stop()
+	})
+	t.Start()
 
 }
 
 func main() {
-
+	Lightbulb_setup()
+	TemptureSensor_setup()
 }
