@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/LuvLetter/hc"
-	"github.com/LuvLetter/hc/accessory"
+	"github.com/brutella/hc"
+	"github.com/brutella/hc/accessory"
 	"log"
 )
 
@@ -13,8 +13,7 @@ func turnLightOn() {
 func turnLightOff() {
 	log.Println("Turn Light Off")
 }
-
-func main() {
+func Lightbulb_setup(){
 	info := accessory.Info{
 		Name:         "Personal Light Bulb",
 		Manufacturer: "Matthias",
@@ -40,4 +39,27 @@ func main() {
 	})
 
 	t.Start()
+}
+func GetTempture() float64{
+		return 0
+}
+
+func TemptureSensor_setup() {
+	info := accessory.Info{
+		Name:         "Generic Tempture Sensor",
+		Manufacturer: "HDU LUG",
+	}
+  for i := 0; true; i++ {
+    TemptureSensor := accessory.NewTemperatureSensor(info, GetTempture(), -35, 100, 0.5)
+     t, err := hc.NewIPTransport(hc.Config{Pin: "32191123"}, TemptureSensor.Accessory)
+  	if err != nil {
+  		log.Fatal(err)
+  	}
+  }
+	t.start()
+
+}
+
+func main() {
+
 }
