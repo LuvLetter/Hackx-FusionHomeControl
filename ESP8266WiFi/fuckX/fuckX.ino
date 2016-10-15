@@ -63,14 +63,12 @@ void retJson() {
   content += ptr;
   content += "\",";
 
-  char ptr2[25];
-  itoa(digitalRead(D2),ptr2,10);
   content += "\"hasPeopleMoved\":\"";
-  if(ptr2 == 1){
-    content += true;
+  if(digitalRead(D2) == 1){
+    content += "true";
   }
   else{
-    content += false;
+    content += "false" ;
   }
   content += "\",";
 
