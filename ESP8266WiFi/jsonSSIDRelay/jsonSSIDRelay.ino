@@ -8,8 +8,6 @@ extern "C" {
 
 #define PACKET_LEN 128
 
-char *alphabet = "qwertyuiopasdfghjklzxcvbnmIL1!|";
-char *emoji = "\xf0\x9f\x98\x80\xf0\x9f\x98\x80\xf0\x9f\x98\x82\xf0\x9f\x98\x85\xf0\x9f\x98\x86\xf0\x9f\x99\x83";
 char spaces[] = {' ', '\r', '\n', '\t'};
 byte channel;
 uint8_t packet[PACKET_LEN] = { 0x80, 0x00, 0x00, 0x00,

@@ -14,17 +14,15 @@
  
 WiFiClient client;
  
-const char* ssid     = "LuvLetter-Classic";         // XXXXXX -- 使用时请修改为当前你的 wifi ssid
-const char* password = "luvshelef";         // XXXXXX -- 使用时请修改为当前你的 wifi 密码
+const char* ssid     = "Hackx";         
+const char* password = "fudan2016";         
  
  
-const char* host = "192.168.0.103";
-const unsigned long BAUD_RATE = 115200;                   // serial connection speed
-const unsigned long HTTP_TIMEOUT = 2100;               // max respone time from server
-const size_t MAX_CONTENT_SIZE = 2048;                   // max size of the HTTP response
+const char* host = "10.221.65.97";
+const unsigned long BAUD_RATE = 115200;                   
+const unsigned long HTTP_TIMEOUT = 2100;               
+const size_t MAX_CONTENT_SIZE = 2048;                  
  
-// Skip HTTP headers so that we are at the beginning of the response's body
-//  -- 跳过 HTTP 头，使我们在响应正文的开头
 bool skipResponseHeaders() {
   // HTTP headers end with an empty line
   char endOfHeaders[] = "\r\n\r\n";
@@ -57,8 +55,7 @@ void readReponseContent(char* content, size_t maxSize) {
   Serial.println(content);
   Serial.println("Read Over!");
 }
- 
-// The type of data that we want to extract from the page -- 我们要从此网页中提取的数据的类型
+
 struct UserData {
   char city[16];
   char cnty[16];
@@ -72,15 +69,6 @@ struct UserData {
  
 // 解析数据
 bool parseUserData(char* content, struct UserData* userData) {
-  // Compute optimal size of the JSON buffer according to what we need to parse.
-  //  -- 根据我们需要解析的数据来计算JSON缓冲区最佳大小
-  // This is only required if you use StaticJsonBuffer. -- 如果你使用StaticJsonBuffer时才需要
-  //  const size_t BUFFER_SIZE = 1024;
- 
-  // Allocate a temporary memory pool on the stack -- 在堆栈上分配一个临时内存池
-  //  StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
-  //  -- 如果堆栈的内存池太大，使用 DynamicJsonBuffer jsonBuffer 代替
-  // If the memory pool is too big for the stack, use this instead:
   DynamicJsonBuffer jsonBuffer;
  
   JsonObject& root = jsonBuffer.parseObject(content);
