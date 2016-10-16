@@ -4,16 +4,32 @@ import (
         "github.com/brutella/hc"
         "github.com/brutella/hc/accessory"
         "log"
+        "encoding/json"
         "net/http"
 )
+var responseData = lightReturn {successful}
 
-func turnLight(stat bool) {
-  var url := "10.221.64.122/gpio"
-  if(stat) r, err := http.Get(url + "/1")
-  else r, err := http.Get(url)
+func getJson(url string, target interface{}) error {
+  r, err := http.Get(url)
   if err != nil {
     return err
+  }
+  defer r.Body.Close()
+	log.Println(r.Body)
+  return json.NewDecoder(r.Body).Decode(target)
 }
+type lightReturn struct {
+  successful string
+}
+func turnLightOn() {
+	getJson("10.221.64.122/gpio/1", responseData)
+  log.Println(responseData.stat)
+}
+func turnLightOff() {
+	getJson("10.221.64.122/gpio/0", responseData)
+  log.Println(responseData.stat)
+}
+
 
 
 func main() {
@@ -26,9 +42,9 @@ func main() {
 
         acc.Lightbulb.On.OnValueRemoteUpdate(func(on bool) {
                 if on == true {
-                        turnLight(true)
+                        turnLightOn()
                 } else {
-                        turnLight(false)
+                        turnLightOff()
                 }
         })
 
