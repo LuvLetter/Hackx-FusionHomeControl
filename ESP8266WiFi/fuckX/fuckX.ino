@@ -7,8 +7,8 @@
 #define heartPin D0
 OneWire  ds(D1);  // on pin D1
 
-const char* ssid = "Hackx";
-const char* password = "fudan2016";
+const char* ssid = "LuvLetter-Classic";
+const char* password = "luvshelf";
 float celsius, fahrenheit;
 float rate;
 int minTime;
@@ -181,3 +181,4 @@ void loop(void){
   flush();
   server.handleClient();
 }
+
