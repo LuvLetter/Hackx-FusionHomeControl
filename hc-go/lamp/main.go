@@ -7,7 +7,7 @@ import (
         "encoding/json"
         "net/http"
 )
-var responseData = lightReturn {successful}
+var responseData = lightReturn {"high"}
 
 func getJson(url string, target interface{}) error {
   r, err := http.Get(url)
@@ -21,14 +21,13 @@ func getJson(url string, target interface{}) error {
 type lightReturn struct {
   successful string
 }
-func turnLightOn() {
-	getJson("10.221.64.122/gpio/1", responseData)
-  log.Println(responseData.stat)
-}
-func turnLightOff() {
-	getJson("10.221.64.122/gpio/0", responseData)
-  log.Println(responseData.stat)
-}
+// func turnLightOn() {
+//
+// }
+// func turnLightOff() {
+// 	getJson("10.221.64.122/gpio/0", responseData)
+//   log.Println(responseData.successful)
+// }
 
 
 
@@ -42,9 +41,12 @@ func main() {
 
         acc.Lightbulb.On.OnValueRemoteUpdate(func(on bool) {
                 if on == true {
-                        turnLightOn()
+                  //10.221.64.122
+                  getJson("10.221.64.122/gpio/1", responseData)
+                  log.Println(responseData.successful)
                 } else {
-                        turnLightOff()
+                  getJson("10.221.64.122/gpio/0", responseData)
+                  log.Println(responseData.successful)
                 }
         })
 
