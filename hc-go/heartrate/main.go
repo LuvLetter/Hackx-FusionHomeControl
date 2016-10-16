@@ -28,20 +28,20 @@ func getJson(url string, target interface{}) error {
   return json.NewDecoder(r.Body).Decode(target)
 }
 
-func Getmonoxide() float64{
+func GetHeartRate() float64{
 	getJson(NodeIP, responseData)
-  log.Println(responseData.CO)
-  return responseData.Temperature
+  log.Println(responseData.heartRate)
+  return float64(responseData.heartRate)
 }
 
-func monoxideSensor_setup() {
+func heartRateSensor_setup() {
 	info := accessory.Info{
-		Name:         "Generic Carbon Monoxide Sensor",
+		Name:         "Generic HeartRate Sensor",
 		Manufacturer: "HDU LUG",
-		Model: "A",
+    Model: "A",
 	}
-	monoxideSensor := accessory.NewTemperatureSensor(info, Getmonoxide()/4 , -35, 200, 0.5)
-	t, err := hc.NewIPTransport(hc.Config{Pin: "00000043"}, monoxideSensor.Accessory)
+	TemptureSensor := accessory.NewTemperatureSensor(info, GetHeartRate(), -35, 100, 0.5)
+	t, err := hc.NewIPTransport(hc.Config{Pin: "00000032"}, TemptureSensor.Accessory)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,5 +51,5 @@ func monoxideSensor_setup() {
 
 func main() {
   log.Println("Start:")
-	monoxideSensor_setup()
+	heartRateSensor_setup()
 }

@@ -30,16 +30,18 @@ func getJson(url string, target interface{}) error {
 
 func GetHasPeple() float64{
 	getJson(NodeIP, responseData)
-  return responseData.hasPeopleMoved
+  if(responseData.hasPeopleMoved) {return 100}
+	return 0
 }
 
 func TemptureSensor_setup() {
 	info := accessory.Info{
-		Name:         "Generic Temperature Sensor",
+		Name:         "Generic IR Sensor",
 		Manufacturer: "HDU LUG",
+		Model: "A",
 	}
-	TemptureSensor := accessory.NewTemperatureSensor(info, GetTempture(), -35, 100, 0.5)
-	t, err := hc.NewIPTransport(hc.Config{Pin: "00000001"}, TemptureSensor.Accessory)
+	TemptureSensor := accessory.NewTemperatureSensor(info, GetHasPeple(), -35, 100, 0.5)
+	t, err := hc.NewIPTransport(hc.Config{Pin: "00000081"}, TemptureSensor.Accessory)
 	if err != nil {
 		log.Fatal(err)
 	}
