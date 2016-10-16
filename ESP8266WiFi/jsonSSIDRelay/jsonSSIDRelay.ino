@@ -65,16 +65,9 @@ void setup() {
 void loop() {
   uint8_t ssid[9] = { 0 };
   byte slen;
-  if (random(2)) {
-    ssid[0] = alphabet[random(strlen(alphabet))];
-    memcpy(ssid + 1, "-HDU", 5);
-    slen = 5;
-  } else {
-    byte seq = random(strlen(emoji)) / 4;
-    memcpy(ssid, emoji + seq * 4, 4);
-    memcpy(ssid + 4, "-HDU", 5);
-    slen = 8;
-  }
+
+  memcpy(ssid,"Temp:2",6);
+  slen=6;
   Serial.print((char*)ssid);
 
   mac[0] = 0x00;
